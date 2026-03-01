@@ -8,7 +8,7 @@ const port=process.env.PORT || 5000;
 connectDb();
 
 app.get('/',(req,res)=>{
-    res.send("Hello world")
+    res.send("Backend working ! ")
 })
 
 // route middleware

@@ -63,7 +63,7 @@ try {
     )
 
     return res.status(200).json({
-        message:"Login successfully !",
+        message:"Login Successfully !",
         token,
         user:{
             id:user._id,

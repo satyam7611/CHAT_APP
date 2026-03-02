@@ -1,6 +1,7 @@
 import User from "../models/user.models.js";
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import createTokenAndSaveCookie from '../jwt/generateToken.js';
 export const signUp=async(req,res)=>{
     try {
         const {name,email,password ,confirmPassword}= req.body;
@@ -22,7 +23,9 @@ export const signUp=async(req,res)=>{
             password:hashPassword,
 
         }) 
-        return res.status(201).json({
+        if(newUser){
+           createTokenAndSaveCookie(newUser._id,res)
+             res.status(201).json({
             message:"User Registered Successfully !",
             user:{
                 id:newUser._id,
@@ -30,6 +33,8 @@ export const signUp=async(req,res)=>{
                 email:newUser.email
             }
         })
+        }
+      
 
     } catch (error) {
         console.log(error.message)
@@ -56,22 +61,20 @@ try {
         return res.status(400).json({message:"Invalid Credentials"});
     }
 
-    const token=jwt.sign(
-        {userId:user._id},
-        process.env.JWT_SECRET,
-        {expiresIn:"1d"}
-    )
+  // 4️⃣ Create token & save in cookie
+    createTokenAndSaveCookie(user._id, res);
 
+    // 5️⃣ Send response
     return res.status(200).json({
-        message:"Login Successfully !",
-        token,
-        user:{
-            id:user._id,
-            name:user.name,
-            email:user.email
+      message: "Login Successfully!",
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+      },
+    });
 
-        }
-    })
+
     
 } catch (error) {
     console.log(error.message);
@@ -79,4 +82,14 @@ try {
     
 }
 
+}
+
+
+export const logout=async(req,res)=>{
+    try {
+        res.clearCookie('jwt');
+        res.status(200).json({message:"Logged out successfully !"});
+    } catch (error) {
+        res.status(400).json({message:"User did not logout something went wrong !"})
+    }
 }

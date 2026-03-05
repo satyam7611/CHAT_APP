@@ -93,3 +93,17 @@ export const logout=async(req,res)=>{
         res.status(400).json({message:"User did not logout something went wrong !"})
     }
 }
+
+// get all user from db;
+
+export const getUserProfile=async(req,res)=>{
+try {
+    const loggedInUser = req.user.id;
+    const filteredUsers = await User.find({
+      _id: { $ne: loggedInUser },
+    }).select("-password");
+    res.status(201).json(filteredUsers);
+  } catch (error) {
+    console.log("Error in allUsers Controller: " + error);
+  }
+}

@@ -2,6 +2,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import connectDb from './config/db.js';
 import userRoute from './router/user.route.js';
+import messageRoute from './router/message.route.js'
 import cookieParser from "cookie-parser";
 import cors from "cors";
 const app=express();
@@ -22,6 +23,7 @@ app.get('/',(req,res)=>{
 // route middleware
 app.use(express.json())
 app.use('/api/v1/users',userRoute);
+app.use('/api/message',messageRoute)
 
 app.listen(port,()=>{
     console.log(`server running on ${port}`)

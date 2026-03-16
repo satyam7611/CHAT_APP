@@ -3,22 +3,45 @@ import Left from "./Home/Left/Left"
 import Logout from "./Home/Left1/Logout"
 import Right from "./Home/right/Right"
 import Login from "./components/Login"
+import { Route,Routes } from "react-router-dom" 
+import { useAuth } from "./context/AuthProvider.jsx"
+import { Navigate } from "react-router-dom"
+import Loading from "./components/Loading.jsx"
 function App() {
-  return (
+  const {authUser,setAuthUser}=useAuth();
+  
+  console.log(authUser)
+    return (
 
 <>
- {/* <div className="flex min-h-screen overflow-hidden">
-      
-     <Logout/>
-     <Left/>
-     <Right/> 
-   
-  
-  
-   
-    </div> */}
-      <SignUp/>
-     {/* <Login/> */}
+ <Routes>
+  <Route
+    path="/"
+    element={
+      authUser ? (
+        <div className="flex min-h-screen overflow-hidden">
+          <Logout setAuthUser={setAuthUser} />
+          <Left />
+          <Right />
+        </div>
+      ) : (
+        <Navigate to="/login" replace />
+      )
+    }
+  />
+
+  <Route
+    path="/login"
+    element={authUser ? <Navigate to="/" replace /> : <Login />}
+  />
+
+  <Route
+    path="/signup"
+    element={authUser ? <Navigate to="/" replace /> : <SignUp />}
+  />
+</Routes>
+{/* <Loading/> */}
+
 </>
    
  

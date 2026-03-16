@@ -2,6 +2,7 @@ import { Mail, User, Lock } from "lucide-react";
 import { useForm } from "react-hook-form"
 import axios from 'axios';
 import { useAuth } from "../context/AuthProvider.jsx";
+import { Link } from "react-router-dom";
 const SignUp = () => {
 
   const {authUser,setAuthUser}=useAuth();
@@ -109,7 +110,7 @@ const SignUp = () => {
                <p className="text-black">
             Have any Account {" "} ?
         </p>
-       <a href="/login" className=" text-blue-700">Login</a>
+       <Link to="/login" className=" text-blue-700">Login</Link>
         </div>
       
       </form>

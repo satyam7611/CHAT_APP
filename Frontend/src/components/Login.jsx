@@ -1,6 +1,8 @@
 import { Mail, User, Lock } from "lucide-react";
 import { useForm } from "react-hook-form";
+import { useAuth } from "../context/AuthProvider.jsx";
 import axios from "axios";
+import { Link } from "react-router-dom";
 const Login = () => {
     const {authUser,setAuthUser}=useAuth();
 
@@ -96,9 +98,9 @@ const Login = () => {
         </button>
         <div className="flex justify-between">
           <p className="text-black">Have Not Account ?</p>
-          <a href="/register" className=" text-blue-700">
+          <Link to="/signup" className=" text-blue-700">
             Register
-          </a>
+          </Link>
         </div>
       </form>
     </div>

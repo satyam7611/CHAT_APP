@@ -1,17 +1,22 @@
-const Message = () => {
+const Message = ({ message }) => {
+  const authUser = JSON.parse(localStorage.getItem("messenger"));
+
+  const itsMe =
+    message.senderId?.toString() === authUser.user.id;
+
+  const chatName = itsMe ? "chat-end" : "chat-start";
+  const chatColor = itsMe ? "bg-blue-400" : "";
+  console.log(message.senderId=== authUser.user.id)
+
   return (
-    <>
-      <div className="p-2 ">
-        <div className="chat chat-end">
-          <div className="chat-bubble chat-bubble-info border rounded-1xl">Calm down, Anakin.</div>
+    <div className="p-4">
+      <div className={`chat ${chatName}`}>
+        <div className={`chat-bubble text-white ${chatColor}`}>
+          {message.message}
         </div>
       </div>
-      <div className="chat chat-start">
-        <div className="chat-bubble chat-bubble-accent">
-          That's never been done in the history of the Jedi.
-        </div>
-      </div>
-    </>
+    </div>
   );
 };
+
 export default Message;

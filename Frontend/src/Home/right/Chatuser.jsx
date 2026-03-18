@@ -1,4 +1,8 @@
+import useConversation from "../../stateManageMent/useConversation";
+import Loading from "../../components/Loading";
 const Chatuser = () => {
+  const {selectedConversation } = useConversation();
+  console.log("chatuser is ",selectedConversation?selectedConversation.name:'')
   return (
     <div className="flex space-x-4 pt-3 pb-3 pl-3 sticky top-0 z-10 bg-gray-900 hover:bg-gray-600">
       <div className="avatar avatar-online">
@@ -8,7 +12,7 @@ const Chatuser = () => {
         </div>
       </div>
       <div>
-        <h1 className="font-bold">Satyam</h1>
+        <h1 className="font-bold">{selectedConversation?selectedConversation.name:"Loading.."}</h1>
         <span className="text-sm">Online</span>
       </div>
     </div>

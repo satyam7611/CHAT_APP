@@ -17,6 +17,7 @@ const GetAllUser = () => {
         );
 
         setAllUser(response.data);
+        // console.log(response.data)
       } catch (error) {
         console.log("error while getting users", error.message);
       } finally {

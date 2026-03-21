@@ -1,27 +1,37 @@
+import { useEffect, useRef } from "react";
 import useGetMessage from "../../context/useGetMessage.jsx";
 import Loading from "../../components/Loading.jsx";
 import Message from "./Message";
+
 const Messages = () => {
   const { messages, loading } = useGetMessage();
-  // console.log("message from backend",messages);
+  const bottomRef = useRef();
+
+  // 🔥 auto scroll
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
   return (
-    <>
-      {loading ? (
-        <Loading></Loading>
-      ) : (
-        messages.length > 0 &&
+    <div className="flex-1 overflow-y-auto p-2">
+      
+      {loading && <Loading />}
+
+      {!loading && messages.length > 0 &&
         messages.map((message) => (
           <Message key={message._id} message={message} />
         ))
+      }
+
+      {!loading && messages.length === 0 && (
+        <p className="text-center mt-[20%] text-2xl">say hi</p>
       )}
-      <div className="flex-1 overflow-y-auto p-2">
-        {!loading && messages.length === 0 && (
-          <div>
-            <p className="text-center mt-[20%] text-2xl">say hi</p>
-          </div>
-        )}
-      </div>
-    </>
+
+      {/* 👇 auto scroll anchor */}
+      <div ref={bottomRef}></div>
+
+    </div>
   );
 };
+
 export default Messages;

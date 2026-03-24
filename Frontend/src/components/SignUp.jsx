@@ -44,7 +44,7 @@ const SignUp = () => {
         
         <div className="text-center space-y-1">
           <h1 className="text-2xl font-bold bg-linear-to-r from-blue-300 to-blue-900 bg-clip-text text-transparent">Messenger</h1>
-          <p className="text-sm text-gray-500">Create a <span className="font-bold text-1xl bg-linear-to-l from-blue-500 to-blue-900 text-transparent bg-clip-text">New</span> account</p>
+          <p className="text-sm text-gray-500">Create a  <span className="font-bold text-1xl bg-linear-to-l from-blue-500 to-blue-900 text-transparent bg-clip-text">new</span> account</p>
         </div>
 
         {/* Email */}

@@ -1,6 +1,14 @@
+import useConversation from "../../stateManageMent/useConversation.js";
+
 const Search = () => {
+  const { searchQuery, setSearchQuery } = useConversation();
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+  };
+
   return (
-    <form action="" className="flex justify-center w-full mb-3">
+    <form onSubmit={handleSubmit} className="flex justify-center w-full mb-3">
       <label className="input w-[90%] border rounded-4xl border-none">
      
      
@@ -21,7 +29,13 @@ const Search = () => {
             <path d="m21 21-4.3-4.3"></path>
           </g>
         </svg>
-        <input type="search" className="grow" placeholder="Search" />
+        <input 
+          type="search" 
+          className="grow" 
+          placeholder="Search" 
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
       </label>
     </form>
   );

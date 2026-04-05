@@ -6,18 +6,30 @@ const useSendMessage = () => {
   const [loading, setLoading] = useState(false);
   const { messages, setMessages, selectedConversation } = useConversation();
 
-  const sendMessages = async (message) => {
+  const sendMessages = async (message, file) => {
     if (!selectedConversation?._id) return;
 
     setLoading(true);
     try {
+      let data;
+      let headers = { withCredentials: true };
+
+      if (file) {
+        data = new FormData();
+        data.append("message", message);
+        data.append("file", file);
+        headers["Content-Type"] = "multipart/form-data";
+      } else {
+        data = { message };
+      }
+
       const response = await axios.post(
         `http://localhost:3000/api/message/send/${selectedConversation._id}`,
-        { message }, // ✅ send message in body
-        { withCredentials: true }
+        data,
+        headers
       );
 
-      setMessages([...messages, response.data.newMessage]); // ✅ correct data
+      setMessages([...messages, response.data.newMessage]); 
     } catch (error) {
       console.log("error in useSendMessage", error);
     } finally {

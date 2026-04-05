@@ -3,9 +3,14 @@ import axios from 'axios';
 import Cookies from 'js-cookie'
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import useConversation from "../../stateManageMent/useConversation.js";
+import toast from 'react-hot-toast';
+
 const Logout =({ setAuthUser }) => {
   const [loading ,setLoading]=useState(false);
   const navigate=useNavigate();
+  const { selectedConversation } = useConversation();
+
   const handleLogout=async()=>{
     setLoading(true);
     try {
@@ -18,23 +23,18 @@ const Logout =({ setAuthUser }) => {
        setAuthUser(null);
       Cookies.remove("jwt");
       setLoading(false);
-      alert("Logout successfully");
+      toast.success("Logout successfully");
       navigate('/login');
     } catch (error) {
+      toast.error("Error while logging out");
       console.log("error while logout",error.message)
     }
   }
 
   return (
-    <div className="bg-slate-950   ">
-                 <div className="flex flex-col  justify-end h-180 ">
-               <LuLogOut onClick={handleLogout} className="text-2xl  text-white hover:rounded-lg hover:bg-gray-500 cursor-pointer  duration-200 " />
-      </div>
- 
+    <div className={`bg-slate-950 w-12 md:w-[4%] flex flex-col items-center justify-end pb-8 h-screen ${selectedConversation ? "hidden md:flex" : "flex"}`}>
+      <LuLogOut onClick={handleLogout} className="text-2xl text-white hover:bg-gray-700 rounded-lg p-1 cursor-pointer duration-200" size={32} />
     </div>
-
-
-
   );
 };
 

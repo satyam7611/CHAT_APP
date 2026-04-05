@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import useConversation from "../stateManageMent/useConversation";
 
 const GetAllUser = () => {
   const [allUsers, setAllUser] = useState([]);
   const [loading, setLoading] = useState(false);
+  const { setUnreadCounts } = useConversation();
 
   useEffect(() => {
-    const getUsers = async () => {
+    const getUsersAndUnread = async () => {
       setLoading(true);
       try {
         const response = await axios.get(
@@ -15,18 +17,25 @@ const GetAllUser = () => {
             withCredentials: true,
           }
         );
-
         setAllUser(response.data);
-        // console.log(response.data)
+
+        const unreadResponse = await axios.get(
+          "http://localhost:3000/api/message/unread",
+          {
+            withCredentials: true,
+          }
+        );
+        setUnreadCounts(unreadResponse.data);
+
       } catch (error) {
-        console.log("error while getting users", error.message);
+        console.log("error while getting users or unread counts", error.message);
       } finally {
         setLoading(false);
       }
     };
 
-    getUsers();
-  }, []);
+    getUsersAndUnread();
+  }, [setUnreadCounts]);
 
   return [allUsers, loading];
 };

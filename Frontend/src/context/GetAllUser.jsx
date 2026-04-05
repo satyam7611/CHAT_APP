@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import axiosInstance from "../utils/axiosConfig";
 import useConversation from "../stateManageMent/useConversation";
 
 const GetAllUser = () => {
@@ -11,20 +11,10 @@ const GetAllUser = () => {
     const getUsersAndUnread = async () => {
       setLoading(true);
       try {
-        const response = await axios.get(
-          "http://localhost:3000/api/v1/users/getUserProfile",
-          {
-            withCredentials: true,
-          }
-        );
+        const response = await axiosInstance.get("/api/v1/users/getUserProfile");
         setAllUser(response.data);
 
-        const unreadResponse = await axios.get(
-          "http://localhost:3000/api/message/unread",
-          {
-            withCredentials: true,
-          }
-        );
+        const unreadResponse = await axiosInstance.get("/api/message/unread");
         setUnreadCounts(unreadResponse.data);
 
       } catch (error) {

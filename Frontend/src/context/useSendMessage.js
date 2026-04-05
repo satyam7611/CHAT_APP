@@ -1,6 +1,6 @@
 import { useState } from "react";
 import useConversation from "../stateManageMent/useConversation";
-import axios from "axios";
+import axiosInstance from "../utils/axiosConfig";
 
 const useSendMessage = () => {
   const [loading, setLoading] = useState(false);
@@ -12,7 +12,7 @@ const useSendMessage = () => {
     setLoading(true);
     try {
       let data;
-      let headers = { withCredentials: true };
+      let headers = {};
 
       if (file) {
         data = new FormData();
@@ -23,10 +23,10 @@ const useSendMessage = () => {
         data = { message };
       }
 
-      const response = await axios.post(
-        `http://localhost:3000/api/message/send/${selectedConversation._id}`,
+      const response = await axiosInstance.post(
+        `/api/message/send/${selectedConversation._id}`,
         data,
-        headers
+        { headers }
       );
 
       setMessages([...messages, response.data.newMessage]); 

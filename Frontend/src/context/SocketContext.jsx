@@ -15,7 +15,8 @@ export const SocketProvider = ({ children }) => {
 
   useEffect(() => {
     if (authUser) {
-      const socketInstance = io("http://localhost:3000", {
+      const socketUrl = import.meta.env.VITE_API_URL || "http://localhost:3000";
+      const socketInstance = io(socketUrl, {
         query: {
           userId: authUser.user?.id || authUser.user?._id || authUser._id || authUser.id, // accommodate different possible ways the _id might be stored depending on the login payload
         },

@@ -1,7 +1,7 @@
 import { Mail, User, Lock } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { useAuth } from "../context/AuthProvider.jsx";
-import axios from "axios";
+import axiosInstance from "../utils/axiosConfig";
 import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
 
@@ -19,10 +19,8 @@ const Login = () => {
       email: data.Email,
       password: data.password,
     };
-    axios
-      .post("http://localhost:3000/api/v1/users/signin", userInfo, {
-        withCredentials: true,
-      })
+    axiosInstance
+      .post("/api/v1/users/signin", userInfo)
       .then((Response) => {
         console.log(Response.data) ;
         if(Response.data){

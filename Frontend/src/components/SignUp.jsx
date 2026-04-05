@@ -1,6 +1,6 @@
 import { Mail, User, Lock } from "lucide-react";
 import { useForm } from "react-hook-form"
-import axios from 'axios';
+import axiosInstance from "../utils/axiosConfig";
 import { useAuth } from "../context/AuthProvider.jsx";
 import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
@@ -27,7 +27,7 @@ const SignUp = () => {
         password:data.password,
         confirmPassword:data.confirmPassword
     }
- await axios.post("http://localhost:3000/api/v1/users/signup",userInfo,{ withCredentials: true }).then((Response)=>
+ await axiosInstance.post("/api/v1/users/signup",userInfo).then((Response)=>
   {console.log(Response)
     if(Response.data){
       toast.success("Thank you for registering!")

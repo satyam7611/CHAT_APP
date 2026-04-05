@@ -1,33 +1,30 @@
 import { LuLogOut } from "react-icons/lu";
-import axios from 'axios';
+import axiosInstance from "../../utils/axiosConfig.js";
 import Cookies from 'js-cookie'
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useConversation from "../../stateManageMent/useConversation.js";
 import toast from 'react-hot-toast';
 
-const Logout =({ setAuthUser }) => {
-  const [loading ,setLoading]=useState(false);
-  const navigate=useNavigate();
+const Logout = ({ setAuthUser }) => {
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
   const { selectedConversation } = useConversation();
 
-  const handleLogout=async()=>{
+  const handleLogout = async () => {
     setLoading(true);
     try {
-     await axios.post("http://localhost:3000/api/v1/users/logout",
-      {},
-     { withCredentials: true }
-     )
+      await axiosInstance.post("/api/v1/users/logout", {});
 
       localStorage.removeItem("messenger");
-       setAuthUser(null);
+      setAuthUser(null);
       Cookies.remove("jwt");
       setLoading(false);
       toast.success("Logout successfully");
       navigate('/login');
     } catch (error) {
       toast.error("Error while logging out");
-      console.log("error while logout",error.message)
+      console.log("error while logout", error.message)
     }
   }
 

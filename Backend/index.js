@@ -18,7 +18,8 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 const port=process.env.PORT || 5000;
 connectDb();
 app.use(cors({
-  origin: "http://localhost:5173",
+  origin: ["http://localhost:5173",
+           "chat-app-five-phi-86.vercel.app"],
   credentials: true
 }));
 app.use(cookieParser());

@@ -26,6 +26,18 @@ const messageSchema = new mongoose.Schema(
         type: String,
         default: "",
     },
+    public_id: {
+        type: String,
+        default: "",
+    },
+    originalName: {
+        type: String,
+        default: "",
+    },
+    duration: {
+        type: Number,
+        default: 0,
+    },
     isRead: {
         type: Boolean,
         default: false,

@@ -1,7 +1,96 @@
 import axiosInstance from "../../utils/axiosConfig";
-import { Trash2, Download, X } from "lucide-react";
+import { Trash2, Download, X, Play, Pause } from "lucide-react";
 import useConversation from "../../stateManageMent/useConversation.js";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
+
+const VoicePlayer = ({ url, duration }) => {
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [currentTime, setCurrentTime] = useState(0);
+  const audioRef = useRef(null);
+
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    const updateTime = () => setCurrentTime(audio.currentTime);
+    const handleEnded = () => {
+      setIsPlaying(false);
+      setCurrentTime(0);
+    };
+
+    audio.addEventListener("timeupdate", updateTime);
+    audio.addEventListener("ended", handleEnded);
+
+    return () => {
+      audio.removeEventListener("timeupdate", updateTime);
+      audio.removeEventListener("ended", handleEnded);
+    };
+  }, []);
+
+  const togglePlay = (e) => {
+    e.stopPropagation();
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    if (isPlaying) {
+      audio.pause();
+      setIsPlaying(false);
+    } else {
+      audio.play().then(() => {
+        setIsPlaying(true);
+      }).catch(err => {
+        console.error("Playback failed:", err);
+      });
+    }
+  };
+
+  const handleSliderChange = (e) => {
+    e.stopPropagation();
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    const newTime = parseFloat(e.target.value);
+    audio.currentTime = newTime;
+    setCurrentTime(newTime);
+  };
+
+  const formatTime = (secs) => {
+    if (isNaN(secs)) return "0:00";
+    const minutes = Math.floor(secs / 60);
+    const seconds = Math.floor(secs % 60);
+    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+  };
+
+  const totalDuration = duration || (audioRef.current ? audioRef.current.duration : 0) || 0;
+
+  return (
+    <div className="flex items-center gap-3 bg-slate-800/40 border border-slate-700/50 rounded-2xl p-2.5 min-w-[200px] sm:min-w-[240px] mt-1 select-none" onClick={(e) => e.stopPropagation()}>
+      <audio ref={audioRef} src={url} preload="metadata" />
+      
+      <button 
+        onClick={togglePlay}
+        className="w-8 h-8 rounded-full bg-blue-500 hover:bg-blue-400 text-white flex items-center justify-center transition-colors cursor-pointer shrink-0 shadow-sm animate-none"
+      >
+        {isPlaying ? <Pause size={14} fill="white" /> : <Play size={14} fill="white" className="ml-0.5" />}
+      </button>
+
+      <div className="flex-1 flex flex-col gap-1 min-w-0">
+        <input 
+          type="range"
+          min={0}
+          max={totalDuration || 100}
+          value={currentTime}
+          onChange={handleSliderChange}
+          className="w-full h-1 bg-slate-600 rounded-lg appearance-none cursor-pointer accent-blue-500"
+        />
+        <div className="flex justify-between text-[10px] text-slate-400 font-mono">
+          <span>{formatTime(currentTime)}</span>
+          <span>{formatTime(totalDuration)}</span>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const Message = ({ message }) => {
   const [showLightbox, setShowLightbox] = useState(false);
@@ -109,6 +198,18 @@ const Message = ({ message }) => {
                       </div>
                     )}
                   </>
+                ) : message.fileType?.startsWith("video/") ? (
+                  <video
+                    src={message.fileUrl}
+                    controls
+                    className="max-w-[200px] sm:max-w-[280px] rounded-lg border border-gray-500/30 mt-1 focus:outline-none"
+                    onClick={(e) => e.stopPropagation()}
+                  />
+                ) : message.fileType?.startsWith("audio/") ? (
+                  <VoicePlayer
+                    url={message.fileUrl}
+                    duration={message.duration}
+                  />
                 ) : (
                   <a
                     href={message.fileUrl}

@@ -11,6 +11,24 @@ const Chatuser = () => {
 
   console.log("chatuser is ", selectedConversation ? selectedConversation.name : '');
   
+  const renderAvatar = (url, userName) => {
+    if (url) {
+      return (
+        <img 
+          src={url} 
+          alt={userName} 
+          className="w-full h-full object-cover rounded-full" 
+        />
+      );
+    }
+    const initials = userName ? userName.split(" ").map(n => n[0]).join("").toUpperCase().slice(0, 2) : "?";
+    return (
+      <div className="w-full h-full rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-xs sm:text-sm border border-slate-700">
+        {initials}
+      </div>
+    );
+  };
+
   return (
     <div className="flex items-center space-x-3 sm:space-x-4 pt-3 pb-3 pl-2 sm:pl-3 sticky top-0 z-10 bg-gray-900 border-b border-gray-700 min-w-0">
       <button 
@@ -22,7 +40,7 @@ const Chatuser = () => {
       
       <div className={`avatar shrink-0 ${isOnline ? "avatar-online" : ""}`}>
         <div className="w-10 sm:w-12 h-10 sm:h-12 rounded-full">
-          <img src="/IMG_20251209_211011.jpg" alt="" />
+          {renderAvatar(selectedConversation?.profilePhoto, selectedConversation?.name)}
         </div>
       </div>
       <div className="min-w-0 flex-1">

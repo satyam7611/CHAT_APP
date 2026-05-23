@@ -1,21 +1,26 @@
 import Conversation from "../models/conversation.models.js";
 import Message from "../models/message.models.js";
 import { getReceiverSocketId, io } from "../SocketIO/server.js";
+import { cloudinary } from "../config/cloudinary.js";
 
 export const sendMessage = async (req, res) => {
   console.log("send message to satyam singh ", req.params.id, req.body.message);
 
   try {
-    let { message } = req.body;
+    let { message, duration } = req.body;
     const { id: receiverId } = req.params;
     const senderId = req.user._id;
 
     // Handle file attachment
     let fileUrl = "";
     let fileType = "";
+    let public_id = "";
+    let originalName = "";
     if (req.file) {
-      fileUrl = `http://localhost:3000/uploads/${req.file.filename}`;
+      fileUrl = req.file.path; // Cloudinary secure URL
       fileType = req.file.mimetype;
+      public_id = req.file.filename; // Cloudinary public_id
+      originalName = req.file.originalname;
     }
 
     // Default message fallback if only sending a file
@@ -40,7 +45,10 @@ export const sendMessage = async (req, res) => {
       receiverId,
       message,
       fileUrl,
-      fileType
+      fileType,
+      public_id,
+      originalName,
+      duration: duration ? Number(duration) : 0
     });
 
     // push message id to conversation
@@ -131,6 +139,24 @@ export const deleteMessage = async (req, res) => {
 
     message.isDeleted = true;
     message.message = "This message was deleted";
+
+    // Delete attachment from Cloudinary if it exists
+    if (message.public_id) {
+      let resourceType = "image";
+      if (message.fileType?.startsWith("video/")) {
+        resourceType = "video";
+      } else if (message.fileType?.startsWith("audio/")) {
+        resourceType = "video"; // Cloudinary treats audio as 'video'
+      } else if (!message.fileType?.startsWith("image/")) {
+        resourceType = "raw"; // PDFs, docs, general files
+      }
+      try {
+        await cloudinary.uploader.destroy(message.public_id, { resource_type: resourceType });
+      } catch (cloudinaryErr) {
+        console.error("Cloudinary deletion failed:", cloudinaryErr);
+      }
+    }
+
     await message.save();
 
     // Emit real-time event to the receiver

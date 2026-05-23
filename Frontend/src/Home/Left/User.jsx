@@ -23,7 +23,7 @@ const filteredUsers = allUsers.filter(user =>
   <div className="overflow-y-auto h-[calc(100dvh-120px)]">
          {filteredUsers.length > 0 ? (
           filteredUsers.map((e,index)=>(
-              <Users key={index} name={e.name} id={e._id}  email={e.email} />
+              <Users key={index} name={e.name} id={e._id} email={e.email} profilePhoto={e.profilePhoto} />
           ))
          ) : (
            <p className="text-center text-gray-400 mt-4">No contacts found</p>

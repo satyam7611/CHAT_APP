@@ -2,6 +2,7 @@ import User from "../models/user.models.js";
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import createTokenAndSaveCookie from '../jwt/generateToken.js';
+import { cloudinary } from "../config/cloudinary.js";
 export const signUp=async(req,res)=>{
     try {
         const {name,email,password ,confirmPassword}= req.body;
@@ -30,7 +31,8 @@ export const signUp=async(req,res)=>{
             user:{
                 id:newUser._id,
                 name:newUser.name,
-                email:newUser.email
+                email:newUser.email,
+                profilePhoto: newUser.profilePhoto || ""
             }
         })
         }
@@ -71,6 +73,7 @@ try {
         id: user._id,
         name: user.name,
         email: user.email,
+        profilePhoto: user.profilePhoto || ""
       },
     });
 
@@ -107,3 +110,70 @@ try {
     console.log("Error in allUsers Controller: " + error);
   }
 }
+
+export const updateProfilePhoto = async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ message: "No file uploaded" });
+    }
+
+    const userId = req.user._id;
+    const profilePhoto = req.file.path; // Cloudinary secure URL
+    const profilePhoto_public_id = req.file.filename; // Cloudinary public ID
+
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { profilePhoto, profilePhoto_public_id },
+      { new: true }
+    ).select("-password");
+
+    return res.status(200).json({
+      message: "Profile photo updated successfully!",
+      user: {
+        id: updatedUser._id,
+        name: updatedUser.name,
+        email: updatedUser.email,
+        profilePhoto: updatedUser.profilePhoto
+      }
+    });
+  } catch (error) {
+    console.error("Error in updateProfilePhoto:", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const removeProfilePhoto = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    if (user.profilePhoto_public_id) {
+      try {
+        await cloudinary.uploader.destroy(user.profilePhoto_public_id);
+      } catch (cloudinaryErr) {
+        console.error("Cloudinary profile photo deletion failed:", cloudinaryErr);
+      }
+    }
+
+    user.profilePhoto = "";
+    user.profilePhoto_public_id = "";
+    await user.save();
+
+    return res.status(200).json({
+      message: "Profile photo removed successfully!",
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        profilePhoto: ""
+      }
+    });
+  } catch (error) {
+    console.error("Error in removeProfilePhoto:", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};

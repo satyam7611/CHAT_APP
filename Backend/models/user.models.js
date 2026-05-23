@@ -14,6 +14,14 @@ const userSchema= new mongoose.Schema({
           password:{
             type:String,
             required:true
+          },
+          profilePhoto: {
+            type: String,
+            default: ""
+          },
+          profilePhoto_public_id: {
+            type: String,
+            default: ""
           }
 },{timestamps:true})
 

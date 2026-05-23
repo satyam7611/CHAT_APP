@@ -2,7 +2,7 @@ import User from "./User";
 import useConversation from "../../stateManageMent/useConversation.js"
 import { useSocketContext } from "../../context/SocketContext.jsx";
 
-const Users = ({ id, name, email }) => {
+const Users = ({ id, name, email, profilePhoto }) => {
   const { selectedConversation, setSelectedConversation, unreadCounts, clearUnreadCount } = useConversation();
   const { onlineUsers } = useSocketContext();
   
@@ -11,10 +11,28 @@ const Users = ({ id, name, email }) => {
   const isOnline = onlineUsers.includes(id);
 
   const handleSelectConversation = () => {
-    setSelectedConversation({ _id: id, name, email });
+    setSelectedConversation({ _id: id, name, email, profilePhoto });
     if (unreadCount > 0) {
       clearUnreadCount(id);
     }
+  };
+
+  const renderAvatar = (url, userName, size = "w-10 sm:w-12 h-10 sm:h-12") => {
+    if (url) {
+      return (
+        <img 
+          src={url} 
+          alt={userName} 
+          className="w-full h-full object-cover rounded-full" 
+        />
+      );
+    }
+    const initials = userName ? userName.split(" ").map(n => n[0]).join("").toUpperCase().slice(0, 2) : "?";
+    return (
+      <div className="w-full h-full rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-xs sm:text-sm border border-slate-700">
+        {initials}
+      </div>
+    );
   };
 
   return (
@@ -25,7 +43,7 @@ const Users = ({ id, name, email }) => {
         <div className="flex space-x-3 sm:space-x-4 items-center min-w-0">
           <div className={`avatar shrink-0 ${isOnline ? "avatar-online" : ""}`}>
             <div className="w-10 sm:w-12 h-10 sm:h-12 rounded-full">
-              <img src="/IMG_20251209_211011.jpg" alt="" />
+              {renderAvatar(profilePhoto, name)}
             </div>
           </div>
           <div className="min-w-0">

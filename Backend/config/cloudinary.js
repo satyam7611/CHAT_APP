@@ -13,11 +13,17 @@ cloudinary.config({
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: async (req, file) => {
-    // Detect folder and auto format
+    let resource_type = 'raw';
+    if (file.mimetype.startsWith('image/')) {
+      resource_type = 'image';
+    } else if (file.mimetype.startsWith('video/') || file.mimetype.startsWith('audio/')) {
+      resource_type = 'video';
+    }
+
     return {
       folder: 'chat_attachments',
-      resource_type: 'auto', // 'auto' dynamically handles image, video, audio, pdf, docx, etc.
-      public_id: Date.now() + '-' + file.originalname.split('.')[0]
+      resource_type: resource_type,
+      public_id: Date.now() + '-' + file.originalname
     };
   }
 });

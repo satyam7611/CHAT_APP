@@ -29,7 +29,7 @@ const Logout = ({ setAuthUser }) => {
   }
 
   return (
-    <div className={`bg-slate-950 w-12 md:w-[4%] flex flex-col items-center justify-end pb-8 h-screen ${selectedConversation ? "hidden md:flex" : "flex"}`}>
+    <div className={`bg-slate-950 w-12 md:w-[4%] flex flex-col items-center justify-end pb-8 h-dvh ${selectedConversation ? "hidden md:flex" : "flex"}`}>
       <LuLogOut onClick={handleLogout} className="text-2xl text-white hover:bg-gray-700 rounded-lg p-1 cursor-pointer duration-200" size={32} />
     </div>
   );

@@ -6,7 +6,7 @@ const Left = () => {
   const { selectedConversation } = useConversation();
   
   return (
-    <div className={`flex-1 md:flex-none md:w-[30%] text-white bg-black flex-col ${selectedConversation ? "hidden md:flex" : "flex"}`}>
+    <div className={`flex-1 md:flex-none md:w-[320px] lg:w-[360px] xl:w-[400px] text-white bg-black flex-col ${selectedConversation ? "hidden md:flex" : "flex"}`}>
 
       <div>
         <h1 className="font-bold text-3xl p-2 mb-3 mx-1.5">Chats</h1>

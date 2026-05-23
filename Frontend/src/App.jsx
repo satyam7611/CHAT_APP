@@ -23,7 +23,7 @@ function App() {
     path="/"
     element={
       authUser ? (
-        <div className="flex h-screen overflow-hidden">
+        <div className="flex h-dvh overflow-hidden">
           <Logout setAuthUser={setAuthUser} />
           <Left />
           <Right />

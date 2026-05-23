@@ -18,23 +18,23 @@ const Users = ({ id, name, email }) => {
   };
 
   return (
-    <div className={`hover:bg-slate-600 duration-300  ${
+    <div className={`hover:bg-slate-600 duration-300 ${
       isSelected ?"bg-slate-700" : ""
     }`} onClick={handleSelectConversation}>
-      <div className="flex justify-between items-center px-6 py-7 hover:bg-slate-600 duration-300 cursor-pointer ">
-        <div className="flex space-x-4 items-center">
-          <div className={`avatar ${isOnline ? "avatar-online" : ""}`}>
-            <div className="w-10 md:w-14 rounded-full">
+      <div className="flex justify-between items-center px-4 sm:px-6 py-3 sm:py-3.5 hover:bg-slate-600 duration-300 cursor-pointer">
+        <div className="flex space-x-3 sm:space-x-4 items-center min-w-0">
+          <div className={`avatar shrink-0 ${isOnline ? "avatar-online" : ""}`}>
+            <div className="w-10 sm:w-12 h-10 sm:h-12 rounded-full">
               <img src="/IMG_20251209_211011.jpg" alt="" />
             </div>
           </div>
-          <div>
-            <h1 className="font-bold">{name}</h1>
-            <span>{email}</span>
+          <div className="min-w-0">
+            <h1 className="font-bold truncate text-sm sm:text-base">{name}</h1>
+            <span className="text-xs sm:text-sm text-gray-400 truncate block">{email}</span>
           </div>
         </div>
         {unreadCount > 0 && (
-          <div className="bg-green-500 text-white text-xs font-bold w-6 h-6 flex items-center justify-center rounded-full">
+          <div className="bg-green-500 text-white text-xs font-bold w-6 h-6 flex items-center justify-center rounded-full shrink-0 ml-2">
             {unreadCount}
           </div>
         )}

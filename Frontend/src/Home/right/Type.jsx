@@ -65,11 +65,11 @@ const Type = () => {
               <X size={14} />
             </button>
           </div>
-          <p className="text-sm text-gray-400 truncate max-w-[200px]">{file.name}</p>
+          <p className="text-sm text-gray-400 truncate flex-1 max-w-[150px] sm:max-w-xs md:max-w-md">{file.name}</p>
         </div>
       )}
 
-      <div className="flex items-center gap-3 p-3">
+      <div className="flex items-center gap-2 sm:gap-3 p-2.5 sm:p-3 pb-[calc(10px+env(safe-area-inset-bottom))]">
         <input 
           type="file"
           ref={fileInputRef}
@@ -79,7 +79,7 @@ const Type = () => {
         
         <button 
           onClick={() => fileInputRef.current?.click()}
-          className="p-2 text-gray-400 hover:text-white transition rounded-full hover:bg-gray-800"
+          className="p-2 text-gray-400 hover:text-white transition rounded-full hover:bg-gray-800 shrink-0"
         >
           <Paperclip size={22} className="rotate-45" />
         </button>
@@ -90,13 +90,13 @@ const Type = () => {
           onChange={(e) => setMessage(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder={file ? "Add a caption..." : "Type here"}
-          className="flex-1 bg-gray-800 text-white p-3 rounded-lg outline-none"
+          className="flex-1 bg-gray-800 text-white p-3 rounded-lg outline-none text-base"
         />
 
         <button 
           onClick={handleSend} 
           disabled={loading || (!message.trim() && !file)}
-          className={`p-2 rounded-full transition ${(!message.trim() && !file) ? "text-gray-600" : "text-blue-500 hover:text-blue-400 hover:bg-gray-800"}`}
+          className={`p-2 rounded-full transition shrink-0 ${(!message.trim() && !file) ? "text-gray-600" : "text-blue-500 hover:text-blue-400 hover:bg-gray-800"}`}
         >
           <IoMdSend className="text-2xl" />
         </button>

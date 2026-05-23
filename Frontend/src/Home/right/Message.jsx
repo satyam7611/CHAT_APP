@@ -5,6 +5,7 @@ import { useState } from "react";
 
 const Message = ({ message }) => {
   const [showLightbox, setShowLightbox] = useState(false);
+  const [showActions, setShowActions] = useState(false);
   const authUser = JSON.parse(localStorage.getItem("messenger"));
   const { deleteMessageFromStore } = useConversation();
 
@@ -19,7 +20,8 @@ const Message = ({ message }) => {
       ? "bg-blue-400 text-white"
       : "bg-gray-700 text-white";
 
-  const handleDelete = async () => {
+  const handleDelete = async (e) => {
+    e.stopPropagation();
     try {
       await axiosInstance.post(`/api/message/delete/${message._id}`);
       // Update local state instantly after successful deletion
@@ -36,12 +38,15 @@ const Message = ({ message }) => {
   return (
     <div className="px-2 py-1">
       <div className={`chat ${chatName} group`}>
-        <div className={`chat-bubble relative ${chatColor} break-words max-w-[70%] sm:max-w-md md:max-w-lg lg:max-w-xl pb-1`}>
+        <div 
+          onClick={() => { if (!message.isDeleted && itsMe) setShowActions(!showActions); }}
+          className={`chat-bubble relative ${chatColor} break-words cursor-pointer select-none max-w-[85%] sm:max-w-[75%] md:max-w-[70%] pb-1`}
+        >
           {/* Render Trash icon to the left of the message if itsMe */}
           {itsMe && !message.isDeleted && (
             <button
               onClick={handleDelete}
-              className="absolute -left-12 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 p-2 text-red-400 hover:text-red-500 hover:bg-gray-800 rounded-full flex-shrink-0"
+              className={`absolute left-[-40px] md:-left-12 top-1/2 -translate-y-1/2 transition-opacity duration-300 p-2 text-red-400 hover:text-red-500 hover:bg-gray-800 rounded-full flex-shrink-0 ${showActions ? "opacity-100" : "opacity-0 group-hover:opacity-100"}`}
               title="Delete for everyone"
             >
               <Trash2 size={16} />
@@ -63,15 +68,18 @@ const Message = ({ message }) => {
                     <img
                       src={message.fileUrl}
                       alt="Attachment"
-                      onClick={() => setShowLightbox(true)}
+                      onClick={(e) => { e.stopPropagation(); setShowLightbox(true); }}
                       className="max-w-[200px] sm:max-w-[250px] rounded-lg object-cover border border-gray-500/30 mt-1 cursor-pointer hover:opacity-90 transition-opacity"
                     />
 
                     {/* Full Screen Lightbox Overlay */}
                     {showLightbox && (
-                      <div className="fixed inset-0 z-[100] bg-black/95 flex items-center justify-center">
+                      <div 
+                        onClick={(e) => { e.stopPropagation(); setShowLightbox(false); }}
+                        className="fixed inset-0 z-[100] bg-black/95 flex items-center justify-center"
+                      >
                         {/* Top Control Bar */}
-                        <div className="absolute top-4 right-4 flex items-center gap-4">
+                        <div className="absolute top-4 right-4 flex items-center gap-4" onClick={(e) => e.stopPropagation()}>
                           <a
                             href={message.fileUrl}
                             download={`Image-${message._id}`}
@@ -83,7 +91,7 @@ const Message = ({ message }) => {
                             <Download size={24} />
                           </a>
                           <button
-                            onClick={() => setShowLightbox(false)}
+                            onClick={(e) => { e.stopPropagation(); setShowLightbox(false); }}
                             className="p-2 bg-gray-800/80 text-white rounded-full hover:bg-gray-700 hover:text-red-400 transition cursor-pointer flex items-center justify-center shrink-0"
                             title="Close preview"
                           >
@@ -95,7 +103,8 @@ const Message = ({ message }) => {
                         <img
                           src={message.fileUrl}
                           alt="Full Screen Attachment"
-                          className="max-h-[90vh] max-w-[90vw] object-contain rounded-lg shadow-2xl select-none"
+                          className="max-h-[90dvh] max-w-[90vw] object-contain rounded-lg shadow-2xl select-none"
+                          onClick={(e) => e.stopPropagation()}
                         />
                       </div>
                     )}
@@ -106,6 +115,7 @@ const Message = ({ message }) => {
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center gap-2 p-2 bg-gray-800/50 rounded-lg underline text-sm mt-1 hover:bg-gray-800"
+                    onClick={(e) => e.stopPropagation()}
                   >
                     📎 Download Attachment
                   </a>

@@ -41,7 +41,7 @@ const Login = () => {
   return (
     <div className="flex min-h-screen w-full justify-center items-center bg-gray-100 px-4">
       <form
-        className="w-90 max-w-md bg-white shadow-lg rounded-xl p-8 space-y-5"
+        className="w-full max-w-md bg-white shadow-lg rounded-xl p-6 sm:p-8 space-y-5"
         onSubmit={handleSubmit(onSubmit)}
       >
         <div className="text-center space-y-1">
@@ -60,7 +60,8 @@ const Login = () => {
         {/* Email */}
         <div className="relative">
           <Mail
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+            className="absolute left-3 top-10/12 -translate-y-10/12 text-gray-400"
+            style={{ top: "21px" }}
             size={18}
           />
           <input
@@ -71,14 +72,15 @@ const Login = () => {
             onChange={(e) => console.log(e.target.value)}
           />
           {errors.Email && (
-            <span className="text-black">This field is required</span>
+            <span className="text-red-500 text-sm mt-1 block">This field is required</span>
           )}
         </div>
 
         {/* Password */}
         <div className="relative">
           <Lock
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+            className="absolute left-3 top-10/12 -translate-y-10/12 text-gray-400"
+            style={{ top: "21px" }}
             size={18}
           />
           <input
@@ -88,14 +90,14 @@ const Login = () => {
             {...register("password", { required: true })}
           />
           {errors.password && (
-            <span className="text-black">This field is required</span>
+            <span className="text-red-500 text-sm mt-1 block">This field is required</span>
           )}
         </div>
 
         <button className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition cursor-pointer">
           Login
         </button>
-        <div className="flex justify-between">
+        <div className="flex justify-between text-sm sm:text-base">
           <p className="text-black">Have Not Account ?</p>
           <Link to="/signup" className=" text-blue-700">
             Register
